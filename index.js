@@ -27,6 +27,12 @@ async function run() {
 
     const toyCollection = client.db("toyPal").collection("toys");
 
+    app.post("/addtoy", async (req, res) => {
+      const body = req.body;
+      const result = await toyCollection.insertOne(body);
+      res.send(result);
+    });
+
     // toys routes
     app.get("/toys", async (req, res) => {
       const result = await toyCollection.find().toArray();
