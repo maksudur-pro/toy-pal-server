@@ -56,11 +56,24 @@ async function run() {
     });
 
     app.get("/myToys/:email", async (req, res) => {
-      const result = await toyCollection
-        .find({
-          seller_email: req.params.email,
-        })
+      const toys = await toyCollection
+        .find({ seller_email: req.params.email })
         .toArray();
+      res.send(toys);
+    });
+
+    app.put("/updateToy/:id", async (req, res) => {
+      const id = req.params.id;
+      const body = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const updateDoc = {
+        $set: {
+          price: body.price,
+          quantity: body.quantity,
+          description: body.description,
+        },
+      };
+      const result = await toyCollection.updateOne(filter, updateDoc);
       res.send(result);
     });
 
